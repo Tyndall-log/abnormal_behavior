@@ -3,11 +3,15 @@ import json
 import cv2
 import keyboard
 from ultralytics import YOLO
+import torch
 
 model = YOLO('./model/yolov8n-pose.pt')
+# model.to('cuda')
 # model = YOLO('./model/yolov8x-pose-p6.pt')
 
-cap = cv2.VideoCapture("./data/sample/7-4_cam02_assault01_place04_day_summer.mp4")
+# 비디오 파일을 읽어옵니다.
+video_path = os.path.abspath("./sample/7-4_cam02_assault01_place04_day_summer.mp4")
+cap = cv2.VideoCapture(video_path)
 fps = cap.get(cv2.CAP_PROP_FPS)
 frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
 

@@ -1,3 +1,5 @@
 /venv
-/skeleton/data
+/sample
 /.idea
+/model
+*.pt
