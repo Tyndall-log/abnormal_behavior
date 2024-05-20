@@ -27,7 +27,7 @@ while cap.isOpened():
 		data = {
 			"frame_id": int(cap.get(cv2.CAP_PROP_POS_FRAMES)),
 			"box": results[0].boxes.xyxy.numpy().tolist(),
-			"keypoints": results[0].keypoints.xy.numpy().tolist(),
+			"keypoints": results[0].keypoints_xy.xy.numpy().tolist(),
 		}
 		frame_data.append(data)
 		

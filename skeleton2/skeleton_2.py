@@ -21,6 +21,9 @@ for root, dirs, files in os.walk(video_folder_path):
         if file.endswith(".mp4"):
             video_files.append(os.path.join(root, file))
 
+# skeletons.mp4 파일 제외
+video_files = [file for file in video_files if "skeletons.mp4" not in file]
+
 # 전체 진행도 표시를 위한 tqdm 설정
 with tqdm(total=len(video_files), desc="Processing videos") as overall_pbar:
     for video_file in video_files:

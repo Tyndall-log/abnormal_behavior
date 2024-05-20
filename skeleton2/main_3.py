@@ -1,3 +1,4 @@
+import logging
 from collections import defaultdict
 import cv2
 from ultralytics import YOLO
@@ -5,6 +6,7 @@ import numpy as np
 import os
 import bson  # pip install pymongo
 from tqdm import tqdm
+import time
 
 # YOLOv8 모델 로드
 model_name = "yolov8x-pose-p6"
@@ -12,7 +14,7 @@ model = YOLO(f"{model_name}.pt")
 model.to("cuda")
 
 # 비디오 파일이 있는 폴더 경로
-video_folder_path = os.path.abspath("G:/abnormal_behavior_wsl/Dataset/assult/outsidedoor_06/23-4")
+video_folder_path = os.path.abspath("G:/abnormal_behavior_wsl/Dataset/assult/outsidedoor_06/23-3")
 
 # 재귀적으로 모든 MP4 파일 찾기
 video_files = []
@@ -59,7 +61,10 @@ with tqdm(total=len(video_files), desc="Processing videos") as overall_pbar:
 
                 if success:
                     # YOLOv8 추적 수행
-                    results = model.track(frame, persist=True, verbose=False)
+                    start_time = time.time_ns()
+                    results = model.track(frame, persist=True, verbose=True if frame_index % 30 == 0 else False)
+                    track_time = time.time_ns()
+                    print(f"Frame {frame_index}/{total_frames} - {track_time - start_time:.4f}s track")
 
                     # 박스, 트랙 ID 및 키포인트 가져오기
                     boxes = results[0].boxes.xywh.cpu().tolist()
@@ -78,14 +83,19 @@ with tqdm(total=len(video_files), desc="Processing videos") as overall_pbar:
                         "keypoints_xy": keypoints_xy
                     }
                     results_data.append(frame_results)
+                    cpu_time = time.time_ns()
 
-                    video_pbar.update(1)  # 진행 상황 업데이트
+                    # video_pbar.update(1)  # 진행 상황 업데이트
 
                     # 30프레임마다 결과를 BSON 파일에 기록
                     if frame_index % 30 == 0:
-                        # video_pbar.update(30)  # 진행 상황 업데이트
+                        video_pbar.update(30)
+                        # 최종 결과를 BSON 파일에 저장
                         with open(output_file, "wb") as f:
                             f.write(bson.encode({"results": results_data}))
+                    save_time = time.time_ns()
+
+                    print(f"Frame {frame_index}/{total_frames} - {track_time - start_time:.4f}s track, {cpu_time - track_time:.4f}s cpu, {save_time - cpu_time:.4f}s save")
                 else:
                     # 비디오가 끝나면 루프 종료
                     break

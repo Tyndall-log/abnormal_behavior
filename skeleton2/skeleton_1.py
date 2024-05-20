@@ -12,7 +12,7 @@ model = YOLO(f"{model_name}.pt")
 model.to("cuda")
 
 # 비디오 파일이 있는 폴더 경로
-video_folder_path = os.path.abspath("G:/abnormal_behavior_wsl/Dataset/assult/outsidedoor_06/23-4")
+video_folder_path = os.path.abspath("G:/abnormal_behavior_wsl/Dataset/assult/outsidedoor_06/23-3")
 
 # 재귀적으로 모든 MP4 파일 찾기
 video_files = []
@@ -20,6 +20,9 @@ for root, dirs, files in os.walk(video_folder_path):
     for file in files:
         if file.endswith(".mp4"):
             video_files.append(os.path.join(root, file))
+
+# skeletons.mp4 파일 제외
+video_files = [file for file in video_files if "skeletons.mp4" not in file]
 
 # 전체 진행도 표시를 위한 tqdm 설정
 with tqdm(total=len(video_files), desc="Processing videos") as overall_pbar:
