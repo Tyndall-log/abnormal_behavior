@@ -3,7 +3,8 @@ import os
 from tqdm import tqdm
 
 # 기본 경로 설정
-base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06"
+# base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06"
+base_path = "E:/내 드라이브/machine_learning/dataset/fight/outsidedoor_12"
 
 # 재귀적으로 모든 mp4 파일 찾기
 mp4_files = glob(os.path.join(base_path, "**", "*.mp4"), recursive=True)
@@ -11,6 +12,10 @@ mp4_files = glob(os.path.join(base_path, "**", "*.mp4"), recursive=True)
 #output_with_skeletons.mp4 파일 제외
 mp4_files = [file for file in mp4_files if "output_with_skeletons.mp4" not in file]
 mp4_files = [file for file in mp4_files if "skeletons.mp4" not in file]
+mp4_files = sorted(mp4_files)
+
+print(mp4_files)
+input("Press Enter to continue...")
 
 # 전체 진행도 표시를 위한 tqdm 설정
 parent_folder_dict = {}

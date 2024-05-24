@@ -2,4 +2,9 @@
 /sample
 /.idea
 /model
+/*/catboost_info
+/*/__pycache__
+*.csv
+*.mp4
 *.pt
+*.joblib

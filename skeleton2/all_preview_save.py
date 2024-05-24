@@ -6,18 +6,26 @@ from tqdm import tqdm
 from glob import glob
 
 # 기본 경로 설정
-base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06"
+# base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06"
+base_path = "E:/내 드라이브/machine_learning/dataset/assult/outsidedoor_06"
+# base_path = "E:/내 드라이브/machine_learning/dataset/fight/outsidedoor_12"
 
 # 재귀적으로 모든 mp4 파일 찾기
 mp4_files = glob(os.path.join(base_path, "**", "*.mp4"), recursive=True)
 
 # skeletons.mp4 파일 제외
 mp4_files = [file for file in mp4_files if "skeletons.mp4" not in file]
+mp4_files = sorted(mp4_files)
+for mp4_file in mp4_files:
+	print(f"Found mp4 file: {mp4_file}")
+input("Press Enter to continue...")
+
 
 def get_color_from_id(track_id):
 	np.random.seed(track_id)
 	color = np.random.randint(0, 255, 3).tolist()
 	return (color[0], color[1], color[2])
+
 
 # 전체 진행도 표시를 위한 tqdm 설정
 with tqdm(total=len(mp4_files), desc="Processing mp4 files") as overall_pbar:
@@ -99,7 +107,8 @@ with tqdm(total=len(mp4_files), desc="Processing mp4 files") as overall_pbar:
 		thickness = 2
 
 		# 개별 영상의 진행도 표시를 위한 tqdm 설정
-		with tqdm(total=total_frames, desc=f"Processing {os.path.basename(mp4_file)}") as video_pbar:
+		show_filename = os.path.join(os.path.basename(os.path.dirname(mp4_file)), os.path.basename(mp4_file)).replace("\\", "/")
+		with tqdm(total=total_frames, desc=f"Processing {show_filename}") as video_pbar:
 			while cap.isOpened():
 				ret, frame = cap.read()
 				if not ret:
@@ -144,7 +153,10 @@ with tqdm(total=len(mp4_files), desc="Processing mp4 files") as overall_pbar:
 				out.write(frame)
 
 				frame_idx += 1
-				video_pbar.update(1)
+
+				# video_pbar.update(1)
+				if frame_idx % 30 == 0:
+					video_pbar.update(30)
 
 			cap.release()
 			out.release()

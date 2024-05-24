@@ -5,10 +5,12 @@ import os
 from glob import glob
 
 # 기본 경로 설정
-base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06\23-1\23-1_cam02_assault01_place02_night_summer"
+# base_path = r"G:\abnormal_behavior_wsl\Dataset\assult\outsidedoor_06\23-1\23-1_cam02_assault01_place02_night_summer"
+base_path = "E:/내 드라이브/machine_learning/dataset/assult/outsidedoor_06/23-1/2"
 
 # .bson 파일과 .mp4 파일 찾기
-bson_files = glob(base_path + "*.bson")
+base_only_filename = os.path.splitext(os.path.basename(base_path))[0]
+bson_files = glob(os.path.join(base_path, f"{base_only_filename}_*.bson"))
 mp4_files = glob(base_path + "*.mp4")
 
 # .bson 파일 선택
@@ -84,6 +86,7 @@ while cap.isOpened():
 	if frame_idx < len(results):
 		result = results[frame_idx]
 		keypoints_list = result['keypoints_xy']
+		print(keypoints_list)
 		boxes = result['boxes']
 		track_ids = result['track_ids']
 
