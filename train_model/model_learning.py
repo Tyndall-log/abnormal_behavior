@@ -7,7 +7,7 @@ from sklearn.preprocessing import LabelEncoder
 import joblib
 
 # 데이터 불러오기
-data = pd.read_csv('train_data(velocities).csv', header=None)
+data = pd.read_csv('train_data(extra).csv', header=None)
 
 # 마지막 열을 라벨로 지정
 X = data.iloc[:, :-1].values
@@ -38,8 +38,8 @@ print("Classification Report:")
 print(report)
 
 # 모델 저장
-joblib.dump(rf_model, 'random(velocities)/random_forest_model.joblib')
-joblib.dump(label_encoder, 'random(velocities)/label_encoder.joblib')
+joblib.dump(rf_model, 'random(extra)/random_forest_model.joblib')
+joblib.dump(label_encoder, 'random(extra)/label_encoder.joblib')
 
 # 모델 불러오기 (예시)
 # loaded_rf_model = joblib.load('random_forest_model.joblib')

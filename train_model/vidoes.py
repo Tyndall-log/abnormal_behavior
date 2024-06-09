@@ -6,7 +6,7 @@ import joblib
 from bson_to_data import get_bson_for_frame
 
 # YOLOv8 모델 로드
-model_name = "yolov8n-pose"
+model_name = "yolov8x-pose-p6"
 model = YOLO(f"{model_name}.pt")
 model.to("cuda")
 
@@ -92,13 +92,15 @@ while cap.isOpened():
 
 		flag = False
 		for p in predicted_labels:
-			if p != "non":
+			if p != "nan":
 				flag = True
 				color = (0, 0, 255)
-				cv2.putText(frame, f'Action: {predicted_label}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+				cv2.putText(frame, f'Action: {p}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, color, 2)
+				#프레임 기록
+				print(frame_idx, p)
 				break
 		if not flag:
-			cv2.putText(frame, f'Action: non', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
+			cv2.putText(frame, f'Action: nan', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2)
 
 		# 바운딩 박스 그리기
 		cv2.rectangle(frame, (x - w // 2, y - h // 2), (x + w // 2, y + h // 2), color, thickness)
